@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no">
+
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+		<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+		<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+		<script src="https://cdn.bootcss.com/picturefill/3.0.3/picturefill.min.js"></script>
+	<![endif]-->
+
+	</head>
+
+	<body>
+		<div id="div_outimg" style="margin-left: auto; margin-right: auto; width: 640px; position: relative;">
+
+			<img id="img_doutu" src="res/img/doutu.jpg" style="position: relative;" />
+			<div id="div_text" style="position: absolute; z-index: 2; bottom: 1px; font-size: 16px; background-color: #ffeeaa; cursor:move;" draggable="true">
+				<!--<span id="spn_text" style="cursor: pointer;"></span>-->
+			</div>
+			<!--<div style="position: absolute; z-index: 1; bottom: 1px; width: 100px; height: 40px; background-color: #ffeeff;"></div>-->
+		</div>
+
+		<input type="text" id="txt_text" value="" />
+		<button id="btn_info">信息</button>
+	</body>
+
+</html>
+<script type="text/javascript" src="res/js/jquery.js"></script>
+<script type="text/javascript" src="res/js/draggabilly.pkgd.min.js"></script>
+<script>
+	$(function() {
+
+		//得到页面加载后字体层最开始的字体大小
+		//var font_size=parseFloat($("#div_text").css("font-size"), 10);
+		var font_size = 48;
+		$("#div_text").css("font-size", font_size + "px");
+		$("#div_text").css("line-height", font_size + "px");
+		$("#div_text").css("height", font_size + "px");
+		//通过键盘事件设置spn_text的内容与div_text的安全度与位置
+		document.getElementById("txt_text").onkeyup = function() {
+			var text_val = $("#txt_text").val();
+			var div_width = text_val.length * font_size + 2
+			$("#div_text").css("width", div_width + "px");
+			//			$("#spn_text").empty();
+			//			$("#spn_text").append(text_val);
+			$("#div_text").empty();
+			$("#div_text").append(text_val);
+			$("#div_text").css("left", (($("#div_outimg").innerHeight() - div_width) / 2) + "px");
+		};
+
+		$("#div_text").draggabilly({ containment: true });
+		
+		$("#btn_info").click(function(){
+			alert($("#div_text").css("left")+"-"+$("#div_text").css("top"));
+		});
+		
+	});
+</script>
