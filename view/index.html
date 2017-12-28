@@ -18,51 +18,69 @@
 		<script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
 		<script src="https://cdn.bootcss.com/picturefill/3.0.3/picturefill.min.js"></script>
 	<![endif]-->
+	
+	<style>
+		@font-face {
+			font-family:"minikatong";
+			src: url("/res/font/mnkt.ttf");
+		}
+	</style>
 
 	</head>
 
 	<body>
-		<div id="div_outimg" style="margin-left: auto; margin-right: auto; width: 640px; position: relative;">
+		<div id="div_outimg" style="margin-left: auto; margin-right: auto; width: 640px; position: relative; border-width: thin; border-style: solid;">
 
-			<img id="img_doutu" src="res/img/doutu.jpg" style="position: relative;" />
-			<div id="div_text" style="position: absolute; z-index: 2; bottom: 1px; font-size: 16px; background-color: #ffeeaa; cursor:move;" draggable="true">
+			<img id="img_doutu" src="/res/img/doutu1.jpg" style="position: relative;" />
+			<div id="div_text" style="position: absolute; z-index: 2; bottom: 1px; font-size: 48px; font-family: minikatong; cursor:move;">
 				<!--<span id="spn_text" style="cursor: pointer;"></span>-->
 			</div>
 			<!--<div style="position: absolute; z-index: 1; bottom: 1px; width: 100px; height: 40px; background-color: #ffeeff;"></div>-->
 		</div>
 
 		<input type="text" id="txt_text" value="" />
-		<button id="btn_info">信息</button>
+		<button id="btn_info">生成图片</button>
 	</body>
 
 </html>
-<script type="text/javascript" src="res/js/jquery.js"></script>
-<script type="text/javascript" src="res/js/draggabilly.pkgd.min.js"></script>
+<script type="text/javascript" src="/res/js/jquery.js"></script>
+<script type="text/javascript" src="/res/js/draggabilly.pkgd.min.js"></script>
 <script>
 	$(function() {
 
 		//得到页面加载后字体层最开始的字体大小
-		//var font_size=parseFloat($("#div_text").css("font-size"), 10);
-		var font_size = 48;
+		var font_size=parseFloat($("#div_text").css("font-size"), 10);
 		$("#div_text").css("font-size", font_size + "px");
 		$("#div_text").css("line-height", font_size + "px");
 		$("#div_text").css("height", font_size + "px");
 		//通过键盘事件设置spn_text的内容与div_text的安全度与位置
 		document.getElementById("txt_text").onkeyup = function() {
 			var text_val = $("#txt_text").val();
-			var div_width = text_val.length * font_size + 2
-			$("#div_text").css("width", div_width + "px");
-			//			$("#spn_text").empty();
-			//			$("#spn_text").append(text_val);
+			//把空格全部替换为&nbsp;
+			text_val=text_val.replace(/ /g, '&nbsp;');
 			$("#div_text").empty();
 			$("#div_text").append(text_val);
+			$("#div_text").css("width", "auto");
+			var div_width=parseFloat($("#div_text").css("width"), 10);
+			
 			$("#div_text").css("left", (($("#div_outimg").innerHeight() - div_width) / 2) + "px");
 		};
 
 		$("#div_text").draggabilly({ containment: true });
 		
 		$("#btn_info").click(function(){
-			alert($("#div_text").css("left")+"-"+$("#div_text").css("top"));
+			var txt_left=parseFloat($("#div_text").css("left"),10);
+			var txt_top=parseFloat($("#div_text").css("top"),10)-parseFloat($("#div_text").css("border-width"),10);
+			var txt_val=$("#txt_text").val();
+			var txt_size=parseFloat($("#div_text").css("font-size"),10);
+			var img_src=$("#img_doutu").attr("src");
+			
+			$.ajax({
+				type:"post",
+				url:"/genimg",
+				async:true,
+				data:{"txt_left":txt_left,"txt_top":txt_top,"txt_val":txt_val,"txt_size":txt_size,"img_src":img_src}
+			});
 		});
 		
 	});
